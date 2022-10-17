@@ -1,10 +1,11 @@
 # Contributors:
-# Qunoot Khaleeq - s2314595
+# Qunoot Khaleeq - s2314595, Morgan Gallagher - s2463128
 
 # repo: 
 
 # Contribution:
-# Qunoot - Implement strategy 1, 2, Pone for startegy 1, 2, Pall for strategy 1
+# Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
+# Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3
 
 strategy_one <- function(n, prisoner, card){
 
@@ -16,7 +17,7 @@ strategy_one <- function(n, prisoner, card){
 	# Input: 
 	# n - number of tries
 	# prisoner - prisoner's number
-	# card - vector of unique random generated noumbers of length 2n  
+	# card - vector of unique random generated numbers of length 2n  
 
 	# Output:
 	# success - 1 if the prisoner finds the number, 0 otherwise
@@ -33,8 +34,7 @@ strategy_one <- function(n, prisoner, card){
 		box <- card[box]
 	}
 	success
-}
-
+  }
 strategy_two <- function(n, prisoner, card){
 
         # Calculate the probability (0 or 1) a prisoner finds their number
@@ -46,7 +46,7 @@ strategy_two <- function(n, prisoner, card){
         # Input:
         # n - number of tries
         # prisoner - prisoner's number
-        # card - vector of unique random generated noumbers of length 2n
+        # card - vector of unique random generated numbers of length 2n
 
         # Output:
         # success - 1 if the prisoner finds the number, 0 otherwise
@@ -68,8 +68,34 @@ strategy_two <- function(n, prisoner, card){
                 box[i+1] <- current_number
         }
         success
-}
+      }
+strategy_three <- function(n, prisoner, card){
 
+        # Calculate the probability (0 or 1) a prisoner finds their number
+        # Open n random boxes out of 2n
+        # If none of the n random boxes contains the prisoner number, it is a failure
+        
+        #Args:
+  
+        #Input:
+        # n - number of tries, or random boxes opened
+        # prisoner - prisoner's number
+        # card - vector of unique random generated numbers of length 2n
+  
+        # Output:
+        # success - 1 if the prisoner finds the number, 0 otherwise
+  
+  
+        rand_boxes <- sample(1:(2*n),n)
+        success = 0
+        for (i in rand_boxes) {
+          if (card[i] == prisoner) {
+            success = 1
+            break
+     }
+  }
+        success
+  }
 
 Pone <- function(n, k, strategy, nreps) {
 
@@ -81,9 +107,8 @@ Pone <- function(n, k, strategy, nreps) {
 	# Input:
 	# n - number of tries
 	# k - prisoner's number
-	# strategy - 1, 2, or 3 to be implememnted
+	# strategy - 1, 2, or 3 to be implemented
 	# nreps - number of replicate simulations
-
 	# Output:
 	# probability of a prisoner succeeding
 	
@@ -110,6 +135,13 @@ Pone <- function(n, k, strategy, nreps) {
                 #str(found)
                 cat(sum(unlist(found))/nreps, "\n")
         }
+  if (strategy == 3) {
+    found <- sapply(1:nreps, function(z) {
+      card <- sample(1:(2*n),2*n)
+      strategy_three(n, k, card)
+    })
+    cat(sum(unlist(found))/nreps, "\n")
+  }
 }
 
 Pall <- function(n, strategy, nreps) {
@@ -147,7 +179,49 @@ Pall <- function(n, strategy, nreps) {
                 #str(found)
                 cat(sum(unlist(found))/nreps, "\n")
         }
+        
+  if (strategy == 2) {
+          found <- sapply(1:nreps, function(x) {
+            
+          card <- sample(1:(2*n),2*n)
+            
+          all_success <- sapply(1:(2*n), function(y) {
+      
+              strategy_two(n, y, card)
+            })
+            if (length(which(unlist(all_success)==0))>0) {
+              0
+            }
+            else {
+              1
+            }
+          })
+        
+          cat(sum(unlist(found))/nreps, "\n")
+  }
+  
+  if (strategy == 3) {
+    found <- sapply(1:nreps, function(x) {
+      
+      card <- sample(1:(2*n),2*n)
+      
+      all_success <- sapply(1:(2*n), function(y) {
+        
+        strategy_three(n, y, card)
+      })
+      if (length(which(unlist(all_success)==0))>0) {
+        0
+      }
+      else {
+        1
+      }
+    })
+    
+    cat(sum(unlist(found))/nreps, "\n")
+  }
 }
+
+
 
 n <- c(5)
 nreps <- c(10)
