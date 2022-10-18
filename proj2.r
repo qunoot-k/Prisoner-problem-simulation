@@ -1,5 +1,5 @@
 # Contributors:
-# Qunoot Khaleeq - s2314595, Morgan Gallagher - s2463128
+# Qunoot Khaleeq - s2314595, Morgan Gallagher - s2463128, Banan Alharthi - s2451066
 
 # repo: 
 
@@ -7,7 +7,7 @@
 # Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
 # Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3
 
-strategy_one <- function(n, prisoner, card){
+strategy_one <- function(n, k, card){
 
 	# Calculate the probability (0 or 1) a prisoner finds their number 
 	# in 2n boxes given n tries, starting with box number k
@@ -22,20 +22,15 @@ strategy_one <- function(n, prisoner, card){
 	# Output:
 	# success - 1 if the prisoner finds the number, 0 otherwise
 	
-	box <- c(prisoner)
-	success = 0
-	for (i in 1:n) {
-		#cat("box - ", box, "card - ", card[box], "\n")
-		if (card[box] == prisoner) {
-			#cat("Success\n")
-			success = 1
-			break
-		} 
-		box <- card[box]
-	}
-	success
+  box <- c(k)
+  success = 0
+  for (i in 1:n) {
+    if (card[box] == k) {success = 1; break} 
+		box <- card[box]}
+  success
   }
-strategy_two <- function(n, prisoner, card){
+
+strategy_two <- function(n, k, card){
 
         # Calculate the probability (0 or 1) a prisoner finds their number
         # in 2n boxes given n tries, starting with a random box number.
@@ -51,25 +46,17 @@ strategy_two <- function(n, prisoner, card){
         # Output:
         # success - 1 if the prisoner finds the number, 0 otherwise
 
-        box <- sample(1:(2*n),1)
-        success = 0
-        for (i in 1:n) {
-		current_number <- card[box[i]]
-                #cat("box - ", current_number, "card - ", card[current_number], "\n")
-                if (card[current_number] == prisoner) {
-                        #cat("Success\n")
-                        success = 1
-                        break
-                }
-		else if (current_number %in% box) {
-			#cat("Loop failure\n")
-			break
-		}
-                box[i+1] <- current_number
-        }
-        success
-      }
-strategy_three <- function(n, prisoner, card){
+  box <- sample(1:(2*n),1)
+  success = 0
+  for (i in 1:n) {
+    current_number <- card[box[i]]
+    if (current_number == k) {success = 1; break}
+    else if (current_number %in% box) {break}
+    box[i+1] <- current_number}
+  success
+  }
+
+strategy_three <- function(n, k, card){
 
         # Calculate the probability (0 or 1) a prisoner finds their number
         # Open n random boxes out of 2n
@@ -84,18 +71,14 @@ strategy_three <- function(n, prisoner, card){
   
         # Output:
         # success - 1 if the prisoner finds the number, 0 otherwise
-  
-  
-        rand_boxes <- sample(1:(2*n),n)
-        success = 0
-        for (i in rand_boxes) {
-          if (card[i] == prisoner) {
-            success = 1
-            break
-     }
+
+  rand_boxes <- sample(1:(2*n),n)
+  success = 0
+  for (i in rand_boxes) {
+    if (card[i] == k) {success = 1; break}}
+  success
   }
-        success
-  }
+
 
 Pone <- function(n, k, strategy, nreps) {
 
@@ -112,36 +95,24 @@ Pone <- function(n, k, strategy, nreps) {
 	# Output:
 	# probability of a prisoner succeeding
 	
-	cat("The probability of a prisoner succeeding, using strategy ", strategy, " is ")
-	if (strategy == 1) {
-		found <- sapply(1:nreps, function(x) {
-			#cat("Rep - ", x, "\n")
-			card <- sample(1:(2*n),2*n)
-			#cat("cards: ", card, "\n")
-			strategy_one(n, k, card)
-		})
-		#str(found)
-		cat(sum(unlist(found))/nreps, "\n")
-	}
-
-        if (strategy == 2) {
-		#cat("Prisoner ", k, "\n")
-                found <- sapply(1:nreps, function(x) {
-                        #cat("Rep - ", x, "\n")
-                        card <- sample(1:(2*n),2*n)
-                        #cat("cards: ", card, "\n")
-                        strategy_two(n, k, card)
-                })
-                #str(found)
-                cat(sum(unlist(found))/nreps, "\n")
-        }
-  if (strategy == 3) {
-    found <- sapply(1:nreps, function(z) {
+  cat("The probability of a prisoner succeeding, using strategy ", strategy, " is ")
+  if (strategy == 1) {
+    found <- sapply(1:nreps, function(x) {
       card <- sample(1:(2*n),2*n)
-      strategy_three(n, k, card)
-    })
-    cat(sum(unlist(found))/nreps, "\n")
-  }
+			strategy_one(n, k, card)})
+    cat(sum(unlist(found))/nreps, "\n")}
+  
+  else if (strategy == 2) {
+    found <- sapply(1:nreps, function(x) {
+      card <- sample(1:(2*n),2*n)
+      strategy_two(n, k, card)})
+    cat(sum(unlist(found))/nreps, "\n")}
+  
+  else if (strategy == 3) {
+    found <- sapply(1:nreps, function(x) {
+      card <- sample(1:(2*n),2*n)
+      strategy_three(n, k, card)})
+    cat(sum(unlist(found))/nreps, "\n")}
 }
 
 Pall <- function(n, strategy, nreps) {
@@ -153,79 +124,42 @@ Pall <- function(n, strategy, nreps) {
 
         # Input:
         # n - number of tries
-        # strategy - 1, 2, or 3 to be implememnted
+        # strategy - 1, 2, or 3 to be implemented
         # nreps - number of replicate simulations
 
         # Output:
         # probability of all prisoners succeeding
 
-	cat("The probability of all prisoners succeeding, using strategy ", strategy, " is ")
-        if (strategy == 1) {
-                found <- sapply(1:nreps, function(x) {
-			#cat("Rep - ", x, "\n")
-                        card <- sample(1:(2*n),2*n)
-                        #cat("cards: ", card, "\n")
-			all_success <- sapply(1:(2*n), function(y) {
-				#cat("Prisinor - ",y, ", number of boxes - " ,n, "\n")
-				strategy_one(n, y, card)
-			})
-			if (length(which(unlist(all_success)==0))>0) {
-				0
-			}
-			else {
-				1
-			}
-                })
-                #str(found)
-                cat(sum(unlist(found))/nreps, "\n")
-        }
-        
-  if (strategy == 2) {
-          found <- sapply(1:nreps, function(x) {
-            
-          card <- sample(1:(2*n),2*n)
-            
-          all_success <- sapply(1:(2*n), function(y) {
-      
-              strategy_two(n, y, card)
-            })
-            if (length(which(unlist(all_success)==0))>0) {
-              0
-            }
-            else {
-              1
-            }
-          })
-        
-          cat(sum(unlist(found))/nreps, "\n")
-  }
-  
-  if (strategy == 3) {
+  cat("The probability of all prisoners succeeding, using strategy ", strategy, " is ")
+  if (strategy == 1) {
     found <- sapply(1:nreps, function(x) {
-      
       card <- sample(1:(2*n),2*n)
-      
-      all_success <- sapply(1:(2*n), function(y) {
-        
-        strategy_three(n, y, card)
-      })
-      if (length(which(unlist(all_success)==0))>0) {
-        0
-      }
-      else {
-        1
-      }
-    })
-    
-    cat(sum(unlist(found))/nreps, "\n")
-  }
-}
+      all_success <- sapply(1:(2*n), function(y) {strategy_one(n, y, card)})
+      if (length(which(unlist(all_success)==0))>0) 
+        {0} else {1}})
+    cat(sum(unlist(found))/nreps, "\n")}
 
+  else if (strategy == 2) {
+    found <- sapply(1:nreps, function(x) {
+      card <- sample(1:(2*n),2*n)
+      all_success <- sapply(1:(2*n), function(y) {strategy_two(n, y, card)})
+      if (length(which(unlist(all_success)==0))>0) 
+        {0} else {1}})
+    cat(sum(unlist(found))/nreps, "\n")}
+  
+  else if (strategy == 3) {
+    found <- sapply(1:nreps, function(x) {
+      card <- sample(1:(2*n),2*n)
+      all_success <- sapply(1:(2*n), function(y) {strategy_three(n, y, card)})
+      if (length(which(unlist(all_success)==0))>0) 
+        {0} else {1}})
+    cat(sum(unlist(found))/nreps, "\n")}
+  }
 
 
 n <- c(5)
 nreps <- c(10)
-#k <- sample(1:(2*n), 1)
+k <- sample(1:(2*n), 1)
 #Pall(n, 1, nreps)
 #Pone(n, k, 1, nreps)
 #Pone(n, k, 2, nreps)
