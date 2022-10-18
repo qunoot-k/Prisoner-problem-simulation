@@ -7,6 +7,7 @@
 # Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
 # Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3, 
       #wrote what is interesting about results
+# Banan - 
 
 strategy_one <- function(n, k, card){
 
@@ -28,14 +29,14 @@ strategy_one <- function(n, k, card){
   for (i in 1:n) {
     if (card[box] == k) {success = 1; break} 
 		box <- card[box]}
-  success
+  return(success)
   }
 
 strategy_two <- function(n, k, card){
 
         # Calculate the probability (0 or 1) a prisoner finds their number
         # in 2n boxes given n tries, starting with a random box number.
-	# If a card contains a number of a box previously opened, it is failure 
+	      # If a card contains a number of a box previously opened, it is failure 
 
         # Args:
 
@@ -54,7 +55,7 @@ strategy_two <- function(n, k, card){
     if (current_number == k) {success = 1; break}
     else if (current_number %in% box) {break}
     box[i+1] <- current_number}
-  success
+  return(success)
   }
 
 strategy_three <- function(n, k, card){
@@ -77,7 +78,7 @@ strategy_three <- function(n, k, card){
   success = 0
   for (i in rand_boxes) {
     if (card[i] == k) {success = 1; break}}
-  success
+  return(success)
   }
 
 
@@ -158,12 +159,13 @@ Pall <- function(n, strategy, nreps) {
   }
 
 
-n <- c(5)
-nreps <- c(10)
+nreps <- c(10000)
 k <- sample(1:(2*n), 1)
-#Pall(n, 1, nreps)
-#Pone(n, k, 1, nreps)
-#Pone(n, k, 2, nreps)
+n <- c(5)
+
+
+n <- c(50)
+
 
 
 #Results: What's surprising is that there is a little over 30% chance that all prisoners
@@ -172,4 +174,39 @@ k <- sample(1:(2*n), 1)
 #strategy 1 is around 50%. If we assumed independence for the rest of the prisoners 
 #during their turn, we would expect Pall using strategy 1 to return almost 0, 0.5^(2n).
 #But this isn't the case, instead the probability is about 0.3. We don't find it difficult
-#to believe Pall using strategy 2 and 3 are 0. 
+#to believe Pall using strategy 2 and 3 are almost 0. 
+
+
+## For the sake of comparison 
+
+dloop <- function(n,nreps) {
+  
+  # description 
+  
+  # Arguments:
+  
+  # Input:
+  
+  # Output:
+  
+  
+  v <- array(0,2*n)             ## 2n-vector of probabilities
+  
+  for (i in 1:nreps) {
+    u = sample(1:(2*n),2*n)     ## card numbers and indices are box numbers
+    k = sample(1:(2*n),1)       ## prisoner number
+    l = k                       ## variable to hold nested values
+    
+    for (ii in 1:(2*n)) {
+      if (u[l] == k) {v[ii] <- v[ii] + 1; break}
+      l = u[l]}
+    }
+  v <- v/nreps                  ## calculate the probabilities
+  return(v)
+  }    
+
+## example n = 50
+#n <- 50
+#v <- dloop(n,nreps)
+#cat("\n mean =",mean(v), "\n standard deviation =", sd(v))
+#hist(v)
