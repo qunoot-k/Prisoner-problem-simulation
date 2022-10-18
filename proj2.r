@@ -5,7 +5,8 @@
 
 # Contribution:
 # Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
-# Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3
+# Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3, 
+      #wrote what is interesting about results
 
 strategy_one <- function(n, k, card){
 
@@ -164,3 +165,11 @@ k <- sample(1:(2*n), 1)
 #Pone(n, k, 1, nreps)
 #Pone(n, k, 2, nreps)
 
+
+#Results: What's surprising is that there is a little over 30% chance that all prisoners
+#will go free if they implement strategy 1. Without much thought we would expect this 
+#probability to be much smaller. The probability of one prisoner getting out using 
+#strategy 1 is around 50%. If we assumed independence for the rest of the prisoners 
+#during their turn, we would expect Pall using strategy 1 to return almost 0, 0.5^(2n).
+#But this isn't the case, instead the probability is about 0.3. We don't find it difficult
+#to believe Pall using strategy 2 and 3 are 0. 
