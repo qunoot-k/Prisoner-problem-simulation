@@ -6,19 +6,19 @@
 # Contribution:
 # Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
 # Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3, 
-      #wrote what is interesting about results
+      #example code for each strategy n=5 and n=50, wrote remarks on results 
 # Banan - 
 
 strategy_one <- function(n, k, card){
 
 	# Calculate the probability (0 or 1) a prisoner finds their number 
-	# in 2n boxes given n tries, starting with box number k
+	# in 2n boxes given n tries, starting with box number k, the prisoner's number
 
 	# Args:
 
 	# Input: 
-	# n - number of tries
-	# prisoner - prisoner's number
+	# n - number of tries/max boxes prisoner can open
+	# k - prisoner's number
 	# card - vector of unique random generated numbers of length 2n  
 
 	# Output:
@@ -41,8 +41,8 @@ strategy_two <- function(n, k, card){
         # Args:
 
         # Input:
-        # n - number of tries
-        # prisoner - prisoner's number
+        # n - number of tries/max boxes prisoner can open
+        # k - prisoner's number
         # card - vector of unique random generated numbers of length 2n
 
         # Output:
@@ -67,8 +67,8 @@ strategy_three <- function(n, k, card){
         #Args:
   
         #Input:
-        # n - number of tries, or random boxes opened
-        # prisoner - prisoner's number
+        # n - number of tries, or number of random boxes opened
+        # k - prisoner's number
         # card - vector of unique random generated numbers of length 2n
   
         # Output:
@@ -90,7 +90,7 @@ Pone <- function(n, k, strategy, nreps) {
 	# Args:
 
 	# Input:
-	# n - number of tries
+	# n - number of tries/max boxes prisoner can open
 	# k - prisoner's number
 	# strategy - 1, 2, or 3 to be implemented
 	# nreps - number of replicate simulations
@@ -125,9 +125,9 @@ Pall <- function(n, strategy, nreps) {
         # Args:
 
         # Input:
-        # n - number of tries
+        # n - number of tries/max boxes prisoner can open
         # strategy - 1, 2, or 3 to be implemented
-        # nreps - number of replicate simulations
+        # nreps - number of times to replicate Pone
 
         # Output:
         # probability of all prisoners succeeding
@@ -166,15 +166,45 @@ n <- c(5)
 
 n <- c(50)
 
+#Estimating the individual success probabilities for n = 5, k = 7 for each strategy
+#Running simulation 10,000 times to get probability 
+Pone(5, 7, 1, 10000)
+Pone(5, 7, 2, 10000)
+Pone(5, 7, 3, 10000)
+
+#Estimating the joint success probabilities for n = 5 for each strategy
+#Running simulation 10,000 times to get probability 
+Pall(5, 1, 10000)
+Pall(5, 2, 10000)
+Pall(5, 3, 10000)
+
+#Estimating the individual success probabilities for n = 50, k = 42 for each strategy
+#Running simulation 10,000 times to get probability 
+Pone(50, 42, 1, 10000)
+Pone(50, 42, 2, 10000)
+Pone(50, 42, 3, 10000)
+
+#Estimating the joint success probabilities for n = 50 for each strategy
+#Running simulation 10,000 times to get probability 
+Pall(50, 1, 10000)
+Pall(50, 2, 10000)
+Pall(50, 3, 10000)
 
 
-#Results: What's surprising is that there is a little over 30% chance that all prisoners
-#will go free if they implement strategy 1. Without much thought we would expect this 
-#probability to be much smaller. The probability of one prisoner getting out using 
-#strategy 1 is around 50%. If we assumed independence for the rest of the prisoners 
-#during their turn, we would expect Pall using strategy 1 to return almost 0, 0.5^(2n).
-#But this isn't the case, instead the probability is about 0.3. We don't find it difficult
-#to believe Pall using strategy 2 and 3 are almost 0. 
+#Results: 
+#What's surprising is that there is a little over 30% chance that all prisoners
+#will go free if they implement strategy 1. All strategies have a positive probability 
+#under Pone but strategies 2 and 3 seem to be ineffective under Pall heading towards
+#probability 0 of success. Strategy 1 continues to have a surprisingly consistent/high 
+#probability compared to the others under Pall. 
+
+#The probability of strategy 1 using Pall is interesting. Because we would expect the
+#event of one prisoner going in and using strategy 1 to be independent of the next
+#prisoner. But this is not the case because Pall using strategy 1 has a probability of 
+#about 0.3, and not 0. If the events were independent we would expect Pall to be 
+#(Pone*Pone*Pone...*Pone) n times, so (0.5)^n = 0, which is not true according to the
+#simulations. So the event of one prisoner going in and implementing strategy 1 is not 
+#independent of another going in and also implementing strategy 1. 
 
 
 ## For the sake of comparison 
