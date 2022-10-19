@@ -215,29 +215,29 @@ dloop <- function(n,nreps) {
   # Output:
   # v - 2n-vector of probabilities of each length of the nested loops occurring
   
-  v <- array(0,2*n)                     # 2n-vector to hold the probabilities
+  v <- array(0,2*n)                      # initiating 2n-vector
   
-  for (i in 1:nreps) {
-    u = sample(1:(2*n),2*n)              # card shuffle
-    box <- sample(1:(2*n),2*n)           # all the boxes
+  for (rep in 1:nreps) {
+    u <- sample(1:(2*n),2*n)             # card shuffle
     c <- array(0,2*n)                    # loop length counter vector
-    for (ii in 1:(2*n)) {
-    k <- box[ii]                         # initial box
-    l <- box[ii]                         # variable to hold nested values
-    for (iii in 1:(2*n)) {
-      if (u[l] == k) {c[iii] <- c[iii] + 1; break}
-      l <- u[l]}
-    c <- c/c; c[is.na(c)] <- 0}          # loop length for each card shuffle
+    for (i in 1:(2*n)) {
+      k <- u[i]                          # initial box
+      l <- k                             # variable to hold nested values
+      for (j in 1:(2*n)) {
+        if (u[l] == k) {c[j] <- c[j] + 1; break}; 
+        l <- u[l]}
+      c <- c/c; c[is.na(c)] <- 0}        # loop length for each card shuffle
     v <- v + c}                          # sum of loop lengths nreps trials
   
-  v <- v/(sum(v))                        # calculate the probabilities
-  return(v)
+  v <- v/(sum(v)); return(v)             # calculate the probabilities
   }    
 
-n <- 50
+n <- 50; nreps <- 10000
 cat("\n Running the nested loops simulation for n =",n,": \n")
 v <- dloop(n,nreps)
 cat("The probability of no nested loops longer than 50 is",sum(v[1:n]),"\n")
-#par(las = 2); plot(v[1:n],type="h"); plot(v[n:(2*n)],type="h")
+plot(v,type="h", 
+     main="Histogram of Loop Length", xlab="Loop Length", ylab="Probability")
 
-plot(v,type="h")
+#The simulation suggests there's around 85% chance of finding loops shorter than
+#n, which supports our argument of using strategy 1 in the prisoner simulation.
