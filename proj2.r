@@ -5,9 +5,13 @@
 
 # Contribution:
 # Qunoot - Implement strategy 1, 2, Pone for strategy 1, 2, Pall for strategy 1
+  #Proportion of contribution: 33.33
 # Morgan - Implement strategy 3, Pone for strategy 3, Pall for strategy 2 and 3, 
-      #example code for each strategy n=5 and n=50, wrote remarks on results 
+  #example code for each strategy n=5 and n=50, wrote remarks on results
+  #Proportion of contribution: 33.33
 # Banan - created dloop function and ran the example and plot
+  #Proportion of contribution: 33.33
+
 
 
 #Objective: 
