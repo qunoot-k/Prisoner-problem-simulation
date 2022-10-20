@@ -215,21 +215,21 @@ dloop <- function(n,nreps) {
   # Output:
   # v - 2n-vector of probabilities of each length of the nested loops occurring
   
-  v <- array(0,2*n)                      # initiating 2n-vector
+  v <- array(0,2*n)                     # initiating 2n-vector
   
   for (rep in 1:nreps) {
-    u <- sample(1:(2*n),2*n)             # card shuffle
-    c <- array(0,2*n)                    # loop length counter vector
+    u <- sample(1:(2*n),2*n)            # card shuffle
+    c <- array(0,2*n)                   # loop length counter vector
     for (i in 1:(2*n)) {
-      k <- u[i]                          # initial box
-      l <- k                             # variable to hold nested values
+      k <- u[i]                         # initial box
+      l <- k                            # variable to hold nested values
       for (j in 1:(2*n)) {
-        if (u[l] == k) {c[j] <- c[j] + 1; break}; 
-        l <- u[l]}
-      c <- c/c; c[is.na(c)] <- 0}        # loop length for each card shuffle
-    v <- v + c}                          # sum of loop lengths nreps trials
+        if (u[l] == k) {c[j] <- c[j] + 1; break} 
+        l <- u[l]}}
+    c <- c/c(1:(2*n))                   # no. of loop lengths for a card shuffle
+    v <- v + c}                         # sum of loop lengths nreps trials
   
-  v <- v/(sum(v)); return(v)             # calculate the probabilities
+  v <- v/(sum(v)); return(v)            # calculate the probabilities
   }    
 
 n <- 50; nreps <- 10000
