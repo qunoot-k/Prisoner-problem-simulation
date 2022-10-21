@@ -251,10 +251,16 @@ Pall(n, 3, nreps)
 
 dloop <- function(n,nreps) {
   
-  # Simulate nreps trials of a 2n vector that represents cards inside boxes  
-  # and estimate the probabilities for each length of the nested loops 
-  # being equal to the initial box k
-  
+  #Simulate nreps trials of a 2n vector that represents cards inside boxes  
+  #and estimate the probabilities for each length of the nested loops occurring.
+  #The trial starts by shuffling the cards in u and initialize a counter vector 
+  #c. Then, it goes through the cards u starting with a different k box for 2n 
+  #times until it gets the card that's equal to k. Otherwise, l will carry out 
+  #the box values into the cards in u. Once the loop is found, c will add 1 to 
+  #index for each number corresponding to the length of the loop, which will be 
+  #divided by the indices numbers to get the number of loops. Lastly, v will 
+  #hold all the values of c for each trial and the function will return v/nreps.
+
   # Input:
   # n - half of the number of cards and boxes in each trial
   # nreps - number of trials simulated
@@ -262,29 +268,29 @@ dloop <- function(n,nreps) {
   # Output:
   # v - 2n-vector of probabilities of each length of the nested loops occurring
   
-  v <- array(0,2*n)                     # initiating 2n-vector
+  v <- array(0,2*n)
   
   for (rep in 1:nreps) {
-    u <- sample(1:(2*n),2*n)            # card shuffle
-    c <- array(0,2*n)                   # loop length counter vector
+    u <- sample(1:(2*n),2*n)
+    c <- array(0,2*n)
     for (i in 1:(2*n)) {
-      k <- u[i]                         # initial box
-      l <- k                            # variable to hold nested values
+      k <- u[i]
+      l <- k
       for (j in 1:(2*n)) {
         if (u[l] == k) {c[j] <- c[j] + 1; break} 
         l <- u[l]}}
-    c <- c/c(1:(2*n))                   # no. of loop lengths for a card shuffle
-    v <- v + c}                         # sum of loop lengths nreps trials
+    c <- c/c(1:(2*n))
+    v <- v + c}
   
-  v <- v/(sum(v)); return(v)            # calculate the probabilities
-  }    
+  v <- v/(nreps); return(v)
+  } 
 
 n <- 50; nreps <- 10000
 cat("\n Running the nested loops simulation for n =",n,": \n")
-v <- dloop(n,nreps)
-cat("The probability of no nested loops longer than 50 is",sum(v[1:n]),"\n")
+v <- dloop(n,nreps); 
+cat("The probability of no loops longer than 50 is",1-sum(v[(n+1):(2*n)]),"\n")
 plot(v,type="h", 
      main="Histogram of Loop Length", xlab="Loop Length", ylab="Probability")
 
-#The simulation suggests there's around 85% chance of finding loops shorter than
+#The simulation suggests there's around 31% chance of finding loops shorter than
 #n, which supports our argument of using strategy 1 in the prisoner simulation.
